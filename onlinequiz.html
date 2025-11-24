@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Beautiful Quiz App</title>
+
+<style>
+    body {
+        margin: 0;
+        font-family: "Poppins", sans-serif;
+        background: #f5f3ff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    .container {
+        background: white;
+        width: 90%;
+        max-width: 450px;
+        padding: 25px;
+        border-radius: 18px;
+        box-shadow: 0px 8px 25px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
+
+    h2 {
+        color: #4c1d95;
+        margin-bottom: 20px;
+        font-weight: 600;
+    }
+
+    .option {
+        background: #ede9fe;
+        padding: 15px;
+        margin: 10px 0;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: 0.2s;
+        font-size: 16px;
+        text-align: center;
+        border: 2px solid transparent;
+    }
+
+    .option:hover {
+        background: #ddd6fe;
+        transform: scale(1.03);
+    }
+
+    .option.correct {
+        background: #bbf7d0;
+        border-color: #16a34a;
+    }
+
+    .option.wrong {
+        background: #fecaca;
+        border-color: #dc2626;
+    }
+
+    button {
+        width: 100%;
+        padding: 15px;
+        background: #6d28d9;
+        border: none;
+        color: white;
+        font-size: 17px;
+        border-radius: 12px;
+        margin-top: 15px;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    button:hover {
+        background: #5b21b6;
+        transform: scale(1.03);
+    }
+
+    #scoreBox {
+        font-size: 22px;
+        color: #4c1d95;
+        margin-top: 20px;
+    }
+</style>
+
+</head>
+<body>
+
+<div class="container" id="quizBox">
+    <h2 id="question">Loading...</h2>
+    <div id="options"></div>
+    <button onclick="nextQuestion()">Next</button>
+</div>
+
+<script>
+    const quiz = [
+        {
+            question: "Which language runs in a web browser?",
+            options: ["Python", "JavaScript", "C++", "Java"],
+            answer: 1
+        },
+        {
+            question: "HTML stands for?",
+            options: ["Hyper Trainer Marking Language", "Hyper Text Markup Language", "Hyper Text Marketing Language", "Hyper Text Making Language"],
+            answer: 1
+        },
+        {
+            question: "Which is a CSS framework?",
+            options: ["React", "Tailwind", "Node.js", "MongoDB"],
+            answer: 1
+        }
+    ];
+
+    let index = 0;
+    let score = 0;
+
+    function loadQuestion() {
+        document.getElementById("question").innerText = quiz[index].question;
+
+        let optionsHTML = "";
+        quiz[index].options.forEach((opt, i) => {
+            optionsHTML += `<div class="option" onclick="checkAnswer(this, ${i})">${opt}</div>`;
+        });
+
+        document.getElementById("options").innerHTML = optionsHTML;
+    }
+
+    function checkAnswer(el, selected) {
+        const correct = quiz[index].answer;
+
+        if (selected === correct) {
+            el.classList.add("correct");
+            score++;
+        } else {
+            el.classList.add("wrong");
+        }
+
+        // Disable all options after selection
+        document.querySelectorAll(".option").forEach(btn => {
+            btn.style.pointerEvents = "none";
+            if (quiz[index].options.indexOf(btn.innerText) === correct)
+                btn.classList.add("correct");
+        });
+    }
+
+    function nextQuestion() {
+        if (index < quiz.length - 1) {
+            index++;
+            loadQuestion();
+        } else {
+            showScore();
+        }
+    }
+
+    function showScore() {
+        document.getElementById("quizBox").innerHTML =
+            `<h2>Your Score</h2><div id="scoreBox">${score} / ${quiz.length}</div>`;
+    }
+
+    loadQuestion();
+</script>
+
+</body>
+</html>
